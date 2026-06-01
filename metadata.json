@@ -1,0 +1,6 @@
+{
+  "name": "VirtuOS",
+  "description": "نظام تشغيل وهمي ومستقر يحاكي بيئة أندرويد متكاملة لتشغيل التطبيقات وأدوات المطورين",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
