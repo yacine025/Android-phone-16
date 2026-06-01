@@ -47,14 +47,14 @@ fun DashboardScreen(
 
     val currentConfig = config ?: VmConfig()
 
-    // Host Slate Palette Style Constants
-    val bgColor = Color(0xFF0D1117)
-    val cardBg = Color(0xFF161B22)
-    val accentColor = Color(0xFF58A6FF) // Virt Blue
-    val terminalGreen = Color(0xFF39D353) // Green glow
-    val borderGray = Color(0xFF30363D)
-    val textWhite = Color(0xFFF0F6FC)
-    val textMuted = Color(0xFF8B949E)
+    // Host Google Material You Palette Style Constants
+    val bgColor = Color(0xFF131314) // Google Charcoal Black
+    val cardBg = Color(0xFF1E1F20) // Soft Google Card Dark Background
+    val accentColor = Color(0xFF8AB4F8) // Pixel Blue
+    val terminalGreen = Color(0xFF81C995) // Google Green
+    val borderGray = Color(0xFF2E3134) // Soft Material You Borderline
+    val textWhite = Color(0xFFE3E2E6) // Crisp white-ish text
+    val textMuted = Color(0xFFC4C6D0) // Subdued gray text
 
     // User Settings interactive state
     var ramSize by remember(currentConfig) { mutableStateOf(currentConfig.ramSizeGb) }
@@ -77,29 +77,89 @@ fun DashboardScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. Sleek High-tech Header
+        // 1. Elegant Google Pixel / Material You "At a Glance" & Header
         item {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(vertical = 8.dp)
             ) {
-                Text(
-                    text = "VirtuOS Emulator",
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = textWhite,
-                    fontFamily = FontFamily.Monospace,
-                    letterSpacing = 1.sp
-                )
-                Text(
-                    text = "محاكي نظام أندرويد وهمي معزول ومستقر",
-                    fontSize = 13.sp,
-                    color = textMuted,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+                // At a Glance layout with date, weather, and status
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        val currentDay = SimpleDateFormat("EEEE, d MMMM", Locale("ar")).format(Date())
+                        Text(
+                            text = currentDay,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = textWhite
+                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Text("🌤️ 22°C", color = textMuted, fontSize = 13.sp)
+                            Box(modifier = Modifier.size(3.dp).background(textMuted, CircleShape))
+                            Text("محرك المحاكي جاهز 🔒", color = Color(0xFF81C995), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                    
+                    // Google Signature Colorful Dots Row
+                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Box(modifier = Modifier.size(7.dp).background(Color(0xFF4285F4), CircleShape))
+                        Box(modifier = Modifier.size(7.dp).background(Color(0xFFEA4335), CircleShape))
+                        Box(modifier = Modifier.size(7.dp).background(Color(0xFFFBBC05), CircleShape))
+                        Box(modifier = Modifier.size(7.dp).background(Color(0xFF34A853), CircleShape))
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(18.dp))
+                
+                // Card for Main VirtuOS Brand Header with Google Vibe
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(cardBg)
+                        .border(1.dp, borderGray, RoundedCornerShape(20.dp))
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF333538)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "G",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Black,
+                            color = Color(0xFF4285F4)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column {
+                        Text(
+                            text = "VirtuOS Emulator",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = textWhite,
+                            letterSpacing = 0.5.sp
+                        )
+                        Text(
+                            text = "بنمط بيئة Google Pixel و أندرويد الخام الأصيل",
+                            fontSize = 11.sp,
+                            color = textMuted,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
             }
         }
 

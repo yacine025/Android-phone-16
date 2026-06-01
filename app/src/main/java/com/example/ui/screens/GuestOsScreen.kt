@@ -125,23 +125,17 @@ fun GuestOsScreen(
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(16.dp),
+                                    .padding(vertical = 12.dp, horizontal = 16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(
-                                    text = "بوابة البيئة المعزولة | VirtuOS Space",
-                                    fontSize = 12.sp,
-                                    color = borderCyan,
-                                    fontWeight = FontWeight.SemiBold,
-                                    letterSpacing = 1.sp,
-                                    modifier = Modifier.padding(bottom = 16.dp)
-                                )
+                                // 1. Pixel Launcher "At a Glance" Widget
+                                PixelAtAGlanceWidget(config = currentConfig)
 
                                 val installedApps = apps.filter { it.isInstalled }
                                 LazyVerticalGrid(
                                     columns = GridCells.Fixed(4),
-                                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     items(installedApps) { app ->
@@ -150,19 +144,28 @@ fun GuestOsScreen(
                                         })
                                     }
 
-                                    // Custom visual App store button
+                                    // Custom visual App store shortcut button
                                     item {
                                         GuestMarketShortcut(onClick = { showAppStoreMenu = true })
                                     }
                                 }
 
+                                // 2. Pixel Launcher Bottom Search Pill Widget (G Search)
+                                PixelSearchPillWidget(onSearchClicked = {
+                                    viewModel.openGuestApp("com.vmos.browser")
+                                    viewModel.browserAddress = "https://www.google.com"
+                                })
+
+                                Spacer(modifier = Modifier.height(10.dp))
+
                                 // Quick Instructions Tips
                                 Card(
-                                    shape = RoundedCornerShape(12.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.4f)),
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.5f)),
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp)
+                                        .padding(horizontal = 8.dp)
+                                        .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(16.dp))
                                 ) {
                                     Row(
                                         modifier = Modifier.padding(12.dp),
@@ -174,7 +177,7 @@ fun GuestOsScreen(
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         Text(
-                                            text = "اسحب الزر العائم لفتح قائمة لوحة التحكم المصغرة السريعة، أو اضغط رمز المتجر لتثبيت المزيد من الأدوات المتقدمة.",
+                                            text = "اسحب الزر العائم لفتح لوحة التحكم السريعة، أو انقر على شريط بحث G لفتح محرك بحث جوجل مباشرة.",
                                             fontSize = 11.sp,
                                             color = Color.White.copy(alpha = 0.9f),
                                             lineHeight = 15.sp
@@ -182,7 +185,7 @@ fun GuestOsScreen(
                                     }
                                 }
                                 
-                                Spacer(modifier = Modifier.height(30.dp))
+                                Spacer(modifier = Modifier.height(20.dp))
                             }
                         } else {
                             // SHOW OPEN APP CONTAINER WINDOW
@@ -316,8 +319,83 @@ fun GuestStatusBar(config: VmConfig, viewModel: VmViewModel) {
 }
 
 // ----------------------------------------------------------------------------
-// GUEST APP SHORTCUT GRAPHIC
+// GUEST APP SHORTCUT GRAPHIC (Google Pixel Circular / Material You Style)
 // ----------------------------------------------------------------------------
+@Composable
+fun PixelAtAGlanceWidget(config: VmConfig) {
+    val currentDay = SimpleDateFormat("EEEE, d MMMM", Locale("ar")).format(Date())
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp, horizontal = 4.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = currentDay,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text("🌤️ 22°C", color = Color.White.copy(alpha = 0.8f), fontSize = 13.sp)
+            Box(modifier = Modifier.size(4.dp).background(Color.White.copy(alpha = 0.5f), CircleShape))
+            Text("المحرك آمن 🛡️", color = Color(0xFF81C995), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun PixelSearchPillWidget(onSearchClicked: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 12.dp)
+            .height(48.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(Color.White.copy(alpha = 0.15f))
+            .clickable(onClick = onSearchClicked)
+            .border(1.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(24.dp))
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Google colorful 'G' mock icon
+            Box(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clip(CircleShape)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "G",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color(0xFF4285F4)
+                )
+            }
+            Text(
+                text = "البحث في الهاتف أو الويب...",
+                color = Color.White.copy(alpha = 0.6f),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal
+            )
+        }
+        
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Icon(Icons.Default.Search, contentDescription = "Web Search", tint = Color.White.copy(alpha = 0.7f), modifier = Modifier.size(16.dp))
+            Icon(Icons.Default.Menu, contentDescription = "Menu List", tint = Color.White.copy(alpha = 0.7f), modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
 @Composable
 fun GuestAppIcon(app: VirtualApp, onClick: () -> Unit) {
     val emoji = when (app.iconName) {
@@ -332,9 +410,18 @@ fun GuestAppIcon(app: VirtualApp, onClick: () -> Unit) {
         else -> "🤖"
     }
 
-    val iconBg = Brush.radialGradient(
-        colors = listOf(Color(0xFF334155), Color(0xFF1E293B))
-    )
+    // Google-style circular background gradients
+    val iconBg = when (app.iconName) {
+        "terminal" -> Brush.verticalGradient(listOf(Color(0xFF0F9D58), Color(0xFF137333)))
+        "folder" -> Brush.verticalGradient(listOf(Color(0xFF4285F4), Color(0xFF1A73E8)))
+        "shield" -> Brush.verticalGradient(listOf(Color(0xFFEA4335), Color(0xFFC5221F)))
+        "settings" -> Brush.verticalGradient(listOf(Color(0xFF5F6368), Color(0xFF3C4043)))
+        "web" -> Brush.verticalGradient(listOf(Color(0xFFFFCC00), Color(0xFFF9AB00)))
+        "edit" -> Brush.verticalGradient(listOf(Color(0xFF9C27B0), Color(0xFF673AB7)))
+        "monitor" -> Brush.verticalGradient(listOf(Color(0xFF00ACC1), Color(0xFF00838F)))
+        "calc" -> Brush.verticalGradient(listOf(Color(0xFFFF7043), Color(0xFFE64A19)))
+        else -> Brush.verticalGradient(listOf(Color(0xFF78909C), Color(0xFF455A64)))
+    }
 
     Column(
         modifier = Modifier
@@ -344,10 +431,10 @@ fun GuestAppIcon(app: VirtualApp, onClick: () -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .size(54.dp)
-                .clip(RoundedCornerShape(12.dp))
+                .size(56.dp)
+                .clip(CircleShape)
                 .background(iconBg)
-                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(12.dp)),
+                .border(2.dp, Color.White.copy(alpha = 0.25f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(emoji, fontSize = 26.sp)
@@ -358,7 +445,7 @@ fun GuestAppIcon(app: VirtualApp, onClick: () -> Unit) {
             color = Color.White,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -367,6 +454,9 @@ fun GuestAppIcon(app: VirtualApp, onClick: () -> Unit) {
 
 @Composable
 fun GuestMarketShortcut(onClick: () -> Unit) {
+    val playStoreBg = Brush.verticalGradient(
+        listOf(Color(0xFF34A853), Color(0xFF0F9D58))
+    )
     Column(
         modifier = Modifier
             .clickable(onClick = onClick)
@@ -375,18 +465,18 @@ fun GuestMarketShortcut(onClick: () -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .size(54.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Brush.radialGradient(listOf(Color(0xFF0369A1), Color(0xFF0F172A))))
-                .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.4f), RoundedCornerShape(12.dp)),
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(playStoreBg)
+                .border(2.dp, Color.White.copy(alpha = 0.25f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Text("🎁", fontSize = 26.sp)
+            Text("🛍️", fontSize = 26.sp)
         }
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "المتجر | Store",
-            color = Color(0xFF38BDF8),
+            text = "متجر Google | Store",
+            color = Color(0xFF81C995),
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold

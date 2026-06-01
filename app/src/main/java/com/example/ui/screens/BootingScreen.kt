@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,41 +55,89 @@ fun BootingScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Bios Header Vibe
+        // Google Pixel Boot Loader / Pulse Block
         Card(
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF131314)),
+            shape = RoundedCornerShape(24.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
+                .border(1.dp, Color(0xFF2E3134), RoundedCornerShape(24.dp))
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column {
+                // Pulsing Google Icon Animation
+                val infiniteTransition = rememberInfiniteTransition(label = "boot_pulse")
+                val pulseScale by infiniteTransition.animateFloat(
+                    initialValue = 0.9f,
+                    targetValue = 1.1f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(1200, easing = FastOutSlowInEasing),
+                        repeatMode = RepeatMode.Reverse
+                    ),
+                    label = "pulseScale"
+                )
+
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF1E1F20))
+                        .padding(4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        drawCircle(
+                            color = Color(0xFF4285F4),
+                            radius = size.width / 2.2f,
+                            style = Stroke(width = 3.dp.toPx())
+                        )
+                    }
+
                     Text(
-                        text = "V_OS VIRTUAL TERMINAL",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF58A6FF),
-                        fontFamily = FontFamily.Monospace
-                    )
-                    Text(
-                        text = titleText,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        text = "G",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White,
+                        modifier = Modifier.graphicsLayer(scaleX = pulseScale, scaleY = pulseScale)
                     )
                 }
 
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = textGreen,
-                    strokeWidth = 2.5.dp
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Text(
+                    text = "VirtuOS Google System",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
+
+                Text(
+                    text = titleText,
+                    fontSize = 13.sp,
+                    color = Color(0xFFC4C6D0),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Multi-colored custom linear progress bar matching Google's logo Colors
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(4.dp)
+                        .clip(CircleShape),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF4285F4)))
+                    Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFFEA4335)))
+                    Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFFFBBC05)))
+                    Box(modifier = Modifier.weight(1f).fillMaxHeight().background(Color(0xFF34A853)))
+                }
             }
         }
 
