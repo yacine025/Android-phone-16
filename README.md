@@ -19,3 +19,20 @@ View your app in AI Studio: https://ai.studio/apps/6e1d22d2-7667-4c8b-bb1e-e8403
 4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
 5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
 6. Run the app on an emulator or physical device
+Create a realistic Android 16 simulator app.
+
+Features:
+- Android 16 home screen.
+- Pixel-style launcher.
+- Quick Settings panel.
+- Notification panel.
+- Lock screen with clock.
+- Settings app.
+- Dark and light mode.
+- Smooth animations.
+- Material 3 Expressive design.
+- Fake apps such as Phone, Messages, Camera, Chrome, Gmail and Play Store.
+- Android 16 wallpapers.
+- Display "Android 16 Simulator" in the system information page.
+
+Make the app fully responsive for Android phones.Language: Arabic.
